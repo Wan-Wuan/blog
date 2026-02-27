@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客文章 - 动态内容切换</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <script src="https://image.uc.cn/s/uae/g/3n/mos-production/fontawesome-free-7.1.0-web/js/all.min.js"></script>
+    
+    <!-- 内联样式避免外部依赖 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6c757d;
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #e9ecef;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --shadow-light: 0 8px 32px rgba(31, 38, 135, 0.07);
+            --shadow-medium: 0 8px 32px rgba(31, 38, 135, 0.15);
+            --transition-default: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* 背景装饰层 */
+        .bg-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.1;
+            filter: blur(40px);
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 20%;
+            background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+        }
+
+        /* 玻璃态效果 */
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-light);
+            border-radius: var(--border-radius);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-light);
+            border-radius: var(--border-radius);
+            transition: var(--transition-default);
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* 悬停效果 */
+        .card-hover-effect:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .img-hover-effect {
+            transition: var(--transition-default);
+        }
+
+        .img-hover-effect:hover {
+            transform: scale(1.05);
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            margin: 1.5rem auto;
+            max-width: 1200px;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition-default);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* 页头 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 分类按钮区域 */
+        .category-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-default);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* 内容区域 */
+        .content-section {
+            margin-top: 2rem;
+        }
+
+        .content-area {
+            opacity: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .content-area.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            position: absolute;
+            visibility: hidden;
+        }
+
+        /* 文章网格 */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .article-card {
+            overflow: hidden;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .article-content {
+            padding: 1.5rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(90deg, var(--accent-color), #4895ef);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .article-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .read-more {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: var(--transition-default);
+        }
+
+        .read-more:hover {
+            gap: 0.5rem;
+        }
+
+        /* 热门文章侧边栏 */
+        .sidebar {
+            margin-top: 3rem;
+            padding: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .popular-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .popular-article {
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .popular-article:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .popular-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .popular-content {
+            flex: 1;
+        }
+
+        .popular-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .popular-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                margin: 1rem auto;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .category-buttons {
+                gap: 0.5rem;
+            }
+            
+            .category-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .page-title {
+                font-size: 1.75rem;
+            }
+            
+            .category-buttons {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰层 -->
+    <div class="bg-decorations">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar glass-effect fade-in">
+        <div class="nav-content">
+            <div class="logo">TechNotes</div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="article.html" class="nav-link active">文章</a>
+                <a href="#" class="nav-link">分类</a>
+                <a href="about.html" class="nav-link">关于</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- 页头 -->
+        <header class="page-header slide-up">
+            <h1 class="page-title">前端技术与实践分享</h1>
+            <p class="page-subtitle">聚焦现代前端开发、工程化实践与用户体验优化，分享实战经验与技术思考</p>
+        </header>
+
+        <!-- 分类按钮区域 -->
+        <section class="category-section">
+            <h2 class="category-title">浏览文章分类</h2>
+            <div class="category-buttons">
+                <button class="category-btn active" data-target="content-tech">技术文章</button>
+                <button class="category-btn" data-target="content-life">生活感悟</button>
+                <button class="category-btn" data-target="content-design">设计思考</button>
+                <button class="category-btn" data-target="content-all">全部文章</button>
+            </div>
+        </section>
+
+        <!-- 动态内容区域 -->
+        <section class="content-section">
+            <!-- 技术文章 -->
+            <div id="content-tech" class="content-area">
+                <div class="articles-grid">
+                    <!-- 文章卡片 1 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.1s">
+                        <img src="https://picsum.photos/seed/react1/800/600" 
+                             alt="Vue3组合式API封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">Vue3开发</span>
+                            <h3 class="article-title">Vue3 组合式API完全指南：从入门到精通</h3>
+                            <p class="article-excerpt">详细讲解Vue3组合式API的核心概念，对比Options API的差异，结合实战案例演示如何构建可维护的大型应用。</p>
+                            <div class="article-meta">
+                                <span>2024年3月18日 · 18分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 文章卡片 2 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.2s">
+                        <img src="https://picsum.photos/seed/ts2/800/600" 
+                             alt="Vue3+TypeScript封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">TypeScript</span>
+                            <h3 class="article-title">Vue3 + TypeScript 最佳实践：类型安全的前端开发</h3>
+                            <p class="article-excerpt">探索如何在Vue3项目中充分利用TypeScript的类型系统，实现组件、状态管理和API请求的全类型覆盖。</p>
+                            <div class="article-meta">
+                                <span>2024年2月25日 · 20分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 文章卡片 3 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.3s">
+                        <img src="https://picsum.photos/seed/vite3/800/600" 
+                             alt="Vite性能优化封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">工程化</span>
+                            <h3 class="article-title">Vite 性能优化实战：构建极速前端开发环境</h3>
+                            <p class="article-excerpt">深入分析Vite的构建原理，分享缓存策略、依赖预构建、代码分割等优化技巧，提升开发和构建效率。</p>
+                            <div class="article-meta">
+                                <span>2024年1月12日 · 15分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 生活感悟 -->
+            <div id="content-life" class="content-area hidden">
+                <div class="articles-grid">
+                    <!-- 文章卡片 1 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.1s">
+                        <img src="https://picsum.photos/seed/life1/800/600" 
+                             alt="程序员成长封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">职业成长</span>
+                            <h3 class="article-title">程序员的长期主义：如何持续成长并避免职业倦怠</h3>
+                            <p class="article-excerpt">分享作为开发者保持学习热情、平衡工作与生活的方法，建立可持续的职业发展路径。</p>
+                            <div class="article-meta">
+                                <span>2024年3月5日 · 12分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 文章卡片 2 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.2s">
+                        <img src="https://picsum.photos/seed/life2/800/600" 
+                             alt="远程工作封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">工作方式</span>
+                            <h3 class="article-title">远程工作两年：我的效率提升与生活平衡之道</h3>
+                            <p class="article-excerpt">总结远程工作的经验教训，分享时间管理、沟通协作和保持专注的实用技巧。</p>
+                            <div class="article-meta">
+                                <span>2024年2月10日 · 14分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 设计思考 -->
+            <div id="content-design" class="content-area hidden">
+                <div class="articles-grid">
+                    <!-- 文章卡片 1 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.1s">
+                        <img src="https://picsum.photos/seed/design1/800/600" 
+                             alt="交互设计封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">交互设计</span>
+                            <h3 class="article-title">微交互设计：提升产品体验的细节之道</h3>
+                            <p class="article-excerpt">探讨如何通过精心设计的微交互提升用户体验，让产品更具生命力和使用愉悦感。</p>
+                            <div class="article-meta">
+                                <span>2024年3月10日 · 16分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 文章卡片 2 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.2s">
+                        <div class="article-content">
+                            <span class="article-category">视觉设计</span>
+                            <h3 class="article-title">现代前端视觉设计：从色彩系统到排版规范</h3>
+                            <p class="article-excerpt">分享如何在前端项目中落地系统化的视觉设计，建立统一的色彩、排版和组件规范。</p>
+                            <div class="article-meta">
+                                <span>2024年1月28日 · 22分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 全部文章 -->
+            <div id="content-all" class="content-area hidden">
+                <div class="articles-grid">
+                    <!-- 技术文章1 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.1s">
+                        <img src="https://picsum.photos/seed/react1/800/600" 
+                             alt="Vue3组合式API封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">Vue3开发</span>
+                            <h3 class="article-title">Vue3 组合式API完全指南：从入门到精通</h3>
+                            <p class="article-excerpt">详细讲解Vue3组合式API的核心概念，对比Options API的差异，结合实战案例演示应用方法。</p>
+                            <div class="article-meta">
+                                <span>2024年3月18日 · 18分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 生活感悟1 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.2s">
+                        <img src="https://picsum.photos/seed/life1/800/600" 
+                             alt="程序员成长封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">职业成长</span>
+                            <h3 class="article-title">程序员的长期主义：如何持续成长并避免职业倦怠</h3>
+                            <p class="article-excerpt">分享作为开发者保持学习热情、平衡工作与生活的方法，建立可持续的职业发展路径。</p>
+                            <div class="article-meta">
+                                <span>2024年3月5日 · 12分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 设计思考1 -->
+                    <article class="article-card glass-card card-hover-effect slide-up" style="animation-delay: 0.3s">
+                        <img src="https://picsum.photos/seed/design1/800/600" 
+                             alt="交互设计封面" class="article-image img-hover-effect">
+                        <div class="article-content">
+                            <span class="article-category">交互设计</span>
+                            <h3 class="article-title">微交互设计：提升产品体验的细节之道</h3>
+                            <p class="article-excerpt">探讨如何通过精心设计的微交互提升用户体验，让产品更具生命力和使用愉悦感。</p>
+                            <div class="article-meta">
+                                <span>2024年3月10日 · 16分钟阅读</span>
+                                <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 热门文章侧边栏 -->
+        <aside class="sidebar glass-card slide-up" style="animation-delay: 0.4s">
+            <h3 class="sidebar-title">热门文章</h3>
+            <div class="popular-articles">
+                <article class="popular-article">
+                    <img src="https://picsum.photos/seed/hot1/400/400" 
+                         alt="热门文章缩略图1" class="popular-img img-hover-effect">
+                    <div class="popular-content">
+                        <h4 class="popular-title">React 18 新特性实战：并发渲染与自动批处理</h4>
+                        <div class="popular-meta">4,582 阅读 · 2024年3月</div>
+                    </div>
+                </article>
+                <article class="popular-article">
+                    <img src="https://picsum.photos/seed/hot2/400/400" 
+                         alt="TypeScript缩略图" class="popular-img img-hover-effect">
+                    <div class="popular-content">
+                        <h4 class="popular-title">TypeScript 类型体操：从基础到高级应用</h4>
+                        <div class="popular-meta">3,921 阅读 · 2024年2月</div>
+                    </div>
+                </article>
+                <article class="popular-article">
+                    <img src="https://picsum.photos/seed/hot3/400/400" 
+                         alt="生产力工具缩略图" class="popular-img img-hover-effect">
+                    <div class="popular-content">
+                        <h4 class="popular-title">2024年前端开发者必备效率工具清单</h4>
+                        <div class="popular-meta">3,678 阅读 · 2024年1月</div>
+                    </div>
+                </article>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer glass-effect">
+        <p>© 2024 TechNotes · 所有文章采用 CC BY-NC-SA 4.0 许可协议</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">专注于分享前端开发、工程化实践与用户体验设计</p>
+    </footer>
+
+    <script>
+        // 动态内容切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有分类按钮
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            // 获取所有内容区域
+            const contentAreas = document.querySelectorAll('.content-area');
+            
+            // 为每个按钮添加点击事件
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 获取目标内容区域ID
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // 移除所有按钮的active类
+                    categoryButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容区域
+                    contentAreas.forEach(area => {
+                        area.classList.add('hidden');
+                    });
+                    
+                    // 显示目标内容区域
+                    const targetArea = document.getElementById(targetId);
+                    if (targetArea) {
+                        // 添加短暂延迟以创建平滑过渡效果
+                        setTimeout(() => {
+                            targetArea.classList.remove('hidden');
+                            
+                            // 触发内容区域的入场动画
+                            const articles = targetArea.querySelectorAll('.slide-up');
+                            articles.forEach((article, index) => {
+                                article.style.animationDelay = `${0.1 * (index + 1)}s`;
+                                // 重新触发动画
+                                article.style.animation = 'none';
+                                setTimeout(() => {
+                                    article.style.animation = '';
+                                }, 10);
+                            });
+                        }, 50);
+                    }
+                });
+            });
+            
+            // 初始加载时触发技术文章区域的动画
+            setTimeout(() => {
+                const initialArticles = document.querySelectorAll('#content-tech .slide-up');
+                initialArticles.forEach((article, index) => {
+                    article.style.animationDelay = `${0.1 * (index + 1)}s`;
+                });
+            }, 300);
+            
+            // 为所有图片添加加载错误处理
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('error', function() {
+                    console.log('图片加载失败:', this.src);
+                    // 可以在这里设置默认图片或隐藏元素
+                });
+            });
+        });
+    </script>
+</body>
+</html>

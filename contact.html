@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我 | 个人博客</title>
+    
+    <!-- 字体资源 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 图标库 -->
+    <script src="https://image.uc.cn/s/uae/g/3n/mos-production/fontawesome-free-7.1.0-web/js/all.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://image.uc.cn/s/uae/g/3n/mos-production/0915/3.4.17.js"></script>
+    
+    <!-- 全局样式 -->
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* 玻璃态效果 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .slide-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .slide-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 导航链接效果 */
+        .nav-link {
+            position: relative;
+            color: #4b5563;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #3b82f6;
+        }
+        
+        .nav-link.active {
+            color: #3b82f6;
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 1px;
+        }
+        
+        /* 自定义表单样式 */
+        .contact-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .contact-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .contact-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 联系信息卡片 */
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .contact-info-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+        
+        .email-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+        
+        .github-icon {
+            background: linear-gradient(135deg, #333333, #666666);
+        }
+        
+        .twitter-icon {
+            background: linear-gradient(135deg, #1DA1F2, #1a91da);
+        }
+        
+        .wechat-icon {
+            background: linear-gradient(135deg, #07C160, #05a84c);
+        }
+        
+        /* 响应式文本 */
+        @media (max-width: 768px) {
+            .responsive-text {
+                font-size: 2.5rem !important;
+            }
+            
+            .responsive-subtext {
+                font-size: 1.1rem !important;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .responsive-text {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .responsive-text {
+                font-size: 3.5rem;
+            }
+        }
+        
+        /* 图片悬停效果 */
+        .img-hover-effect {
+            transition: all 0.4s ease;
+        }
+        
+        .img-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 确保跨浏览器兼容性 */
+        @supports not (backdrop-filter: blur(10px)) {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.95);
+            }
+            
+            .glass-card {
+                background: rgba(255, 255, 255, 0.9);
+            }
+        }
+    </style>
+    
+    <!-- 性能监控脚本 -->
+    <script>!(function(j,a,g){var h=a.location.protocol=="https:"?"https://":"http://",i=j.ITRACE_SAMPLING||1,b=Math.random();if(b<i){var d=a.createElement("script");d.src=h+"g.alicdn.com/woodpeckerx/itrace-next/itrace.iife.js",d.onload=function(){j.itrace.run("pv")},a.head.appendChild(d)}})(window, document, "https://g.alicdn.com/woodpeckerx/itrace-next/itrace.iife.js")</script>
+<script>
+!(function(j,a,g){j.__itrace_conf = {bid: 'kt40h0wl-koyh4af8',rel: '', uid: 'a0df05df-d39a-4b77-a06d-053c03dec02c' ,  spa: true, plugins:['jserror','interface','perf','resource','flow','blank']};var b = a.createElement("script");var d = a.getElementsByTagName("script")[0];b.type = "text/javascript";b.crossorigin = true;b.async = true;b.onload = function(){j.__itrace && j.__itrace.setReady()};d.parentNode.insertBefore(b,d);b.src = g})(window, document, "https://g.alicdn.com/woodpeckerx/itrace-next/itrace.iife.js")
+</script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 glass-effect shadow-sm">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- 网站Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg"></div>
+                    <span class="text-xl font-bold text-gray-800">个人博客</span>
+                </div>
+                
+                <!-- 桌面导航菜单 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">首页</a>
+                    <a href="about.html" class="nav-link">关于</a>
+                    <a href="article.html" class="nav-link">文章</a>
+                    <a href="contact.html" class="nav-link active">联系</a>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端菜单 -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-4 pb-4">
+                <a href="博客主页.html" class="block nav-link py-2">首页</a>
+                <a href="关于.html" class="block nav-link py-2">关于</a>
+                <a href="文章.html" class="block nav-link py-2">文章</a>
+                <a href="#" class="block nav-link active py-2">联系</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 页面标题 -->
+        <section class="mb-12 text-center slide-up">
+            <h1 class="responsive-text font-bold text-gray-800 mb-4">保持联系</h1>
+            <p class="responsive-subtext text-gray-600 max-w-2xl mx-auto">
+                有任何问题、合作意向或只是想打个招呼？欢迎通过以下方式联系我，我通常会在24小时内回复。
+            </p>
+        </section>
+        
+        <!-- 联系表单和信息 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 联系表单 -->
+            <section class="slide-up">
+                <div class="glass-card p-8 shadow-xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-envelope text-blue-500 mr-3"></i>发送消息
+                    </h2>
+                    
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-gray-700 mb-2 font-medium">姓名</label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                class="contact-input"
+                                placeholder="请输入您的姓名"
+                                required
+                            >
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-gray-700 mb-2 font-medium">邮箱</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="contact-input"
+                                placeholder="example@domain.com"
+                                required
+                            >
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block text-gray-700 mb-2 font-medium">主题</label>
+                            <input 
+                                type="text" 
+                                id="subject" 
+                                name="subject" 
+                                class="contact-input"
+                                placeholder="消息主题"
+                                required
+                            >
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-gray-700 mb-2 font-medium">消息内容</label>
+                            <textarea 
+                                id="message" 
+                                name="message" 
+                                class="contact-input contact-textarea"
+                                placeholder="请详细描述您的问题或合作意向..."
+                                required
+                            ></textarea>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <button type="submit" class="submit-btn w-full">
+                                <i class="fas fa-paper-plane mr-2"></i>发送消息
+                            </button>
+                        </div>
+                        
+                        <div id="form-message" class="hidden mt-4 p-4 rounded-lg text-center"></div>
+                    </form>
+                </div>
+            </section>
+            
+            <!-- 联系信息 -->
+            <section class="slide-up">
+                <div class="glass-card p-8 shadow-xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-address-card text-blue-500 mr-3"></i>联系方式
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <!-- 邮箱 -->
+                        <a href="mailto:contact@example.com" class="block contact-info-item img-hover-effect">
+                            <div class="contact-icon email-icon">
+                                <i class="fas fa-envelope text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">电子邮箱</h3>
+                                <p class="text-gray-600">contact@example.com</p>
+                                <p class="text-sm text-gray-500 mt-1">点击发送邮件</p>
+                            </div>
+                        </a>
+                        
+                        <!-- GitHub -->
+                        <a href="https://github.com" target="_blank" class="block contact-info-item img-hover-effect">
+                            <div class="contact-icon github-icon">
+                                <i class="fab fa-github text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">GitHub</h3>
+                                <p class="text-gray-600">github.com/username</p>
+                                <p class="text-sm text-gray-500 mt-1">查看我的开源项目</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Twitter -->
+                        <a href="https://twitter.com" target="_blank" class="block contact-info-item img-hover-effect">
+                            <div class="contact-icon twitter-icon">
+                                <i class="fab fa-twitter text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Twitter</h3>
+                                <p class="text-gray-600">@username</p>
+                                <p class="text-sm text-gray-500 mt-1">关注我的最新动态</p>
+                            </div>
+                        </a>
+                        
+                        <!-- 微信 -->
+                        <div class="contact-info-item img-hover-effect">
+                            <div class="contact-icon wechat-icon">
+                                <i class="fab fa-weixin text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">微信</h3>
+                                <p class="text-gray-600">wechat_id</p>
+                                <p class="text-sm text-gray-500 mt-1">扫码添加微信好友</p>
+                            </div>
+                            <div class="ml-auto">
+                                <!-- 微信二维码占位图 -->
+                                <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-lg border border-green-300 flex items-center justify-center">
+                                    <i class="fas fa-qrcode text-green-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 响应时间说明 -->
+                    <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                        <div class="flex items-start">
+                            <i class="fas fa-clock text-blue-500 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-1">响应时间</h4>
+                                <p class="text-gray-600 text-sm">
+                                    我通常在24小时内回复所有邮件。如果您的问题紧急，可以通过社交媒体直接联系我。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 社交媒体链接 -->
+                <div class="mt-8 glass-card p-6 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-4 text-center">其他社交平台</h3>
+                    <div class="flex justify-center space-x-6">
+                        <a href="https://linkedin.com" target="_blank" class="text-gray-600 hover:text-blue-700 transition-colors">
+                            <i class="fab fa-linkedin text-2xl"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="text-gray-600 hover:text-pink-600 transition-colors">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                        <a href="https://youtube.com" target="_blank" class="text-gray-600 hover:text-red-600 transition-colors">
+                            <i class="fab fa-youtube text-2xl"></i>
+                        </a>
+                        <a href="https://medium.com" target="_blank" class="text-gray-600 hover:text-gray-800 transition-colors">
+                            <i class="fab fa-medium text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- 联系说明 -->
+        <section class="mt-12 slide-up">
+            <div class="glass-card p-8 shadow-lg">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">联系说明</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-handshake text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">合作咨询</h3>
+                        <p class="text-gray-600 text-sm">
+                            如果您有项目合作、技术咨询或商业合作意向，请提供详细的项目描述和您的需求。
+                        </p>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-code text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">技术交流</h3>
+                        <p class="text-gray-600 text-sm">
+                            对于技术问题，建议先在GitHub issues中查看是否有类似问题，或提供可复现的代码示例。
+                        </p>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-comments text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">社区交流</h3>
+                        <p class="text-gray-600 text-sm">
+                            对于非紧急问题或一般性讨论，也可以在Twitter或GitHub Discussions中交流。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="mt-12 py-8 border-t border-gray-200 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded"></div>
+                        <span class="text-lg font-bold text-gray-800">个人博客</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-2">记录思考，分享知识</p>
+                </div>
+                
+                <div class="flex space-x-6 mb-4 md:mb-0">
+                    <a href="博客主页.html" class="text-gray-600 hover:text-blue-600 transition-colors">首页</a>
+                    <a href="关于.html" class="text-gray-600 hover:text-blue-600 transition-colors">关于</a>
+                    <a href="文章.html" class="text-gray-600 hover:text-blue-600 transition-colors">文章</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors">联系</a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-gray-600 text-sm">
+                        &copy; 2026 个人博客. 保留所有权利.
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                        <i class="fas fa-exclamation-triangle text-amber-500 mr-1"></i>
+                        本内容由AI生成，可能存在错误或不准确之处。请在使用前自行核实信息的准确性。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+        
+        // 导航链接激活状态
+        function setActiveNavLink() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // 滚动动画触发
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        // 观察所有需要动画的元素
+        document.querySelectorAll('.slide-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // 表单提交处理
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // 验证表单
+            if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+                showFormMessage('请填写所有必填字段', 'error');
+                return;
+            }
+            
+            // 模拟表单提交
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>发送中...';
+            submitBtn.disabled = true;
+            
+            // 模拟网络请求延迟
+            setTimeout(() => {
+                showFormMessage('消息已成功发送！我会尽快回复您。', 'success');
+                this.reset();
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // 3秒后隐藏成功消息
+                setTimeout(() => {
+                    const messageDiv = document.getElementById('form-message');
+                    messageDiv.classList.add('hidden');
+                }, 3000);
+            }, 1500);
+        });
+        
+        // 显示表单消息
+        function showFormMessage(message, type) {
+            const messageDiv = document.getElementById('form-message');
+            messageDiv.textContent = message;
+            messageDiv.className = `mt-4 p-4 rounded-lg text-center ${type === 'success' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'}`;
+            messageDiv.classList.remove('hidden');
+        }
+        
+        // 图片悬停效果
+        document.querySelectorAll('.img-hover-effect').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+                this.style.boxShadow = '0 25px 50px rgba(0,0,0,0.12)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '';
+            });
+        });
+        
+        // 页面加载完成后设置激活导航链接
+        document.addEventListener('DOMContentLoaded', function() {
+            setActiveNavLink();
+            
+            // 控制台输出当前日期（仅用于调试）
+            const now = new Date();
+            console.log(`页面加载时间: ${now.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            })}`);
+        });
+    </script>
+</body>
+</html>

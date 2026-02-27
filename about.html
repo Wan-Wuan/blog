@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于作者 | 现代极简博客</title>
+    
+    <!-- 字体系统 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 图标 -->
+    <script src="https://image.uc.cn/s/uae/g/3n/mos-production/fontawesome-free-7.1.0-web/js/all.min.js"></script>
+    
+    <!-- TailwindCSS -->
+    <script src="https://image.uc.cn/s/uae/g/3n/mos-production/0915/3.4.17.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        /* 玻璃态效果核心类 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* CSS动画系统 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+        
+        /* 响应式字体类 */
+        @media (max-width: 768px) {
+            .responsive-text {
+                font-size: 2.5rem !important;
+            }
+            
+            .responsive-subtext {
+                font-size: 1.1rem !important;
+            }
+        }
+        
+        /* 卡片统一高度 */
+        .card-height {
+            min-height: 320px;
+        }
+        
+        /* 图片悬停效果 */
+        .img-hover-effect {
+            transition: all 0.3s ease;
+        }
+        
+        .img-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 导航链接下划线动画 */
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* 技能条自定义样式 */
+        .skill-bar-container {
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .skill-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+        
+        /* 自定义时间线样式 */
+        .about-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .about-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #cbd5e1, #93c5fd, #cbd5e1);
+        }
+        
+        .about-timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .about-timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.25rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* 确保文字可读性 */
+        .text-on-light {
+            color: #1e293b;
+        }
+        
+        .text-on-dark {
+            color: #f8fafc;
+        }
+    </style>
+<script>
+!(function(j,a,g){j.__itrace_conf = {bid: 'kt40h0wl-koyh4af8',rel: '', uid: 'a0df05df-d39a-4b77-a06d-053c03dec02c' ,  spa: true, plugins:['jserror','interface','perf','resource','flow','blank']};var b = a.createElement("script");var d = a.getElementsByTagName("script")[0];b.type = "text/javascript";b.crossorigin = true;b.async = true;b.onload = function(){j.__itrace && j.__itrace.setReady()};d.parentNode.insertBefore(b,d);b.src = g})(window, document, "https://g.alicdn.com/woodpeckerx/itrace-next/itrace.iife.js")
+</script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 glass-effect shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="index.html" class="text-2xl font-bold text-slate-800">
+                    <i class="fas fa-mountain text-blue-500 mr-2"></i>
+                    静思随笔
+                </a>
+                
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-slate-600 hover:text-slate-900">首页</a>
+                    <a href="about.html" class="nav-link active text-blue-600 font-medium">关于</a>
+                    <a href="article.html" class="nav-link text-slate-600 hover:text-slate-900">文章</a>
+                    <a href="contact.html" class="nav-link text-slate-600 hover:text-slate-900">联系</a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="mobile-menu-btn" class="md:hidden text-slate-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端菜单 -->
+            <div id="mobile-menu" class="hidden md:hidden py-4 border-t border-slate-200">
+                <div class="flex flex-col space-y-4">
+                    <a href="index.html" class="text-slate-600 hover:text-blue-600">首页</a>
+                    <a href="about.html" class="text-blue-600 font-medium">关于</a>
+                    <a href="articles.html" class="text-slate-600 hover:text-blue-600">文章</a>
+                    <a href="contact.html" class="text-slate-600 hover:text-blue-600">联系</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero 区域 -->
+    <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12 slide-up">
+                    <h1 class="text-5xl md:text-6xl font-bold text-slate-800 mb-6 responsive-text">
+                        关于作者
+                    </h1>
+                    <p class="text-xl text-slate-600 responsive-subtext">
+                        探索思想背后的故事，连接代码与文字之间的桥梁
+                    </p>
+                </div>
+                
+                <!-- 作者介绍卡片 -->
+                <div class="glass-card rounded-2xl p-8 md:p-12 shadow-xl mb-16 slide-up">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                        <!-- 作者头像 -->
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg img-hover-effect">
+                            <img src="https://agent.qianwen.com/mos/06ca51a7f9c543c9bc1f747ac7799786/849b432ea5e2c7181386246e2187ff0c" 
+                                 alt="作者个人头像：亚洲男性，30岁左右，面带温和微笑，穿着简约白色衬衫，浅灰色背景，专业摄影棚拍摄" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        
+                        <!-- 作者基本信息 -->
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-bold text-slate-800 mb-4">陈默</h2>
+                            <p class="text-lg text-slate-600 mb-6">
+                                <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                现居上海 · 全栈开发者 & 技术作家
+                            </p>
+                            
+                            <div class="prose text-slate-700 max-w-none">
+                                <p class="mb-4">
+                                    我是陈默，一名热爱技术与文字的全栈开发者。过去十年间，我穿梭于代码与文字之间，致力于探索技术如何赋能创意表达，以及设计如何提升用户体验。
+                                </p>
+                                <p class="mb-4">
+                                    我的职业生涯始于前端开发，逐渐扩展至后端架构和产品设计。我坚信优秀的技术产品应当是功能与美学的完美结合，而清晰的文字则是连接技术与用户的桥梁。
+                                </p>
+                                <p>
+                                    在这个博客中，我分享关于现代Web开发、设计思维、效率工具以及生活感悟的思考。希望这些内容能为你带来启发，或者至少，一个值得思考的下午。
+                                </p>
+                            </div>
+                            
+                            <!-- 社交链接 -->
+                            <div class="flex flex-wrap gap-4 mt-8">
+                                <a href="#" class="flex items-center gap-2 text-slate-700 hover:text-blue-600">
+                                    <i class="fab fa-github text-xl"></i>
+                                    <span>GitHub</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 text-slate-700 hover:text-blue-600">
+                                    <i class="fab fa-twitter text-xl"></i>
+                                    <span>Twitter</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 text-slate-700 hover:text-blue-600">
+                                    <i class="fab fa-linkedin text-xl"></i>
+                                    <span>LinkedIn</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 text-slate-700 hover:text-blue-600">
+                                    <i class="fas fa-envelope text-xl"></i>
+                                    <span>邮箱</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 专业技能区域 -->
+    <section class="py-16 bg-gradient-to-r from-slate-100 to-blue-100">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12 slide-up">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">专业技能</h2>
+                    <p class="text-slate-600">技术栈的广度与深度，构建解决方案的基础</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 前端技能 -->
+                    <div class="glass-card rounded-2xl p-6 shadow-lg slide-up">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mr-4">
+                                <i class="fas fa-code text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">前端开发</h3>
+                        </div>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-slate-700">React & Vue.js</span>
+                                    <span class="text-blue-600 font-medium">90%</span>
+                                </div>
+                                <div class="skill-bar-container">
+                                    <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-500" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-slate-700">TypeScript</span>
+                                    <span class="text-blue-600 font-medium">85%</span>
+                                </div>
+                                <div class="skill-bar-container">
+                                    <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-500" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-slate-700">现代CSS (Tailwind)</span>
+                                    <span class="text-blue-600 font-medium">95%</span>
+                                </div>
+                                <div class="skill-bar-container">
+                                    <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-500" style="width: 95%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 后端技能 -->
+                    <div class="glass-card rounded-2xl p-6 shadow-lg slide-up">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                                <i class="fas fa-server text-green-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">后端与DevOps</h3>
+                        </div>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-slate-700">Node.js & Python</span>
+                                    <span class="text-blue-600 font-medium">88%</span>
+                                </div>
+                                <div class="skill-bar-container">
+                                    <div class="skill-bar-fill bg-gradient-to-r from-green-500 to-emerald-500" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-slate-700">数据库设计</span>
+                                    <span class="text-blue-600 font-medium">82%</span>
+                                </div>
+                                <div class="skill-bar-container">
+                                    <div class="skill-bar-fill bg-gradient-to-r from-green-500 to-emerald-500" style="width: 82%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-slate-700">云服务 (AWS/Azure)</span>
+                                    <span class="text-blue-600 font-medium">75%</span>
+                                </div>
+                                <div class="skill-bar-container">
+                                    <div class="skill-bar-fill bg-gradient-to-r from-green-500 to-emerald-500" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 职业经历时间线 -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12 slide-up">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">职业历程</h2>
+                    <p class="text-slate-600">从代码新手到全栈开发者的十年旅程</p>
+                </div>
+                
+                <div class="about-timeline slide-up">
+                    <!-- 时间线项目 1 -->
+                    <div class="about-timeline-item">
+                        <div class="glass-card rounded-xl p-6 shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800">高级全栈开发者</h3>
+                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">2021 - 至今</span>
+                            </div>
+                            <p class="text-slate-600 mb-2">科技初创公司 · 上海</p>
+                            <p class="text-slate-700">
+                                领导产品前端架构重构，引入微前端架构，提升团队开发效率40%。主导设计系统开发，统一公司产品视觉语言。负责核心业务模块的后端API设计与性能优化。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间线项目 2 -->
+                    <div class="about-timeline-item">
+                        <div class="glass-card rounded-xl p-6 shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800">前端技术主管</h3>
+                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">2018 - 2021</span>
+                            </div>
+                            <p class="text-slate-600 mb-2">数字营销机构 · 北京</p>
+                            <p class="text-slate-700">
+                                组建并带领8人前端团队，为全球品牌客户打造响应式Web应用。引入敏捷开发流程和代码评审机制。主导技术选型，从Angular迁移至React技术栈，提升开发体验和项目维护性。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间线项目 3 -->
+                    <div class="about-timeline-item">
+                        <div class="glass-card rounded-xl p-6 shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800">前端开发工程师</h3>
+                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">2015 - 2018</span>
+                            </div>
+                            <p class="text-slate-600 mb-2">软件服务公司 · 深圳</p>
+                            <p class="text-slate-700">
+                                参与企业级SaaS产品开发，负责核心功能模块的前端实现。深入学习JavaScript设计模式和性能优化技巧。开始撰写技术博客，分享开发经验和问题解决方案。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间线项目 4 -->
+                    <div class="about-timeline-item">
+                        <div class="glass-card rounded-xl p-6 shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800">初级Web开发者</h3>
+                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">2013 - 2015</span>
+                            </div>
+                            <p class="text-slate-600 mb-2">网络科技公司 · 杭州</p>
+                            <p class="text-slate-700">
+                                职业生涯起点，负责公司官网和客户项目的前端开发。系统学习HTML、CSS、JavaScript基础知识。参与第一个大型电商项目，奠定扎实的Web开发基础。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 个人兴趣区域 -->
+    <section class="py-16 bg-gradient-to-r from-slate-100 to-blue-100">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12 slide-up">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">工作之外</h2>
+                    <p class="text-slate-600">代码之外的生活，灵感来源的多元维度</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 兴趣卡片 1 -->
+                    <div class="glass-card rounded-2xl p-6 shadow-lg flex flex-col items-center text-center slide-up card-height">
+                        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-book-open text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">阅读与写作</h3>
+                        <p class="text-slate-700 flex-grow">
+                            热爱科技与非虚构类书籍，平均每月阅读2-3本。坚持写作技术博客超过5年，相信清晰表达是深度思考的结果。
+                        </p>
+                    </div>
+                    
+                    <!-- 兴趣卡片 2 -->
+                    <div class="glass-card rounded-2xl p-6 shadow-lg flex flex-col items-center text-center slide-up card-height">
+                        <div class="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-hiking text-amber-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">户外徒步</h3>
+                        <p class="text-slate-700 flex-grow">
+                            周末远离屏幕，探索城市周边的自然步道。坚信自然是最好的灵感来源，徒步中的放空时常带来最佳的解决方案。
+                        </p>
+                    </div>
+                    
+                    <!-- 兴趣卡片 3 -->
+                    <div class="glass-card rounded-2xl p-6 shadow-lg flex flex-col items-center text-center slide-up card-height">
+                        <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-music text-emerald-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">音乐与咖啡</h3>
+                        <p class="text-slate-700 flex-grow">
+                            工作时常伴爵士或古典音乐，业余学习吉他。探索城市独立咖啡馆，品味不同烘焙风格，将咖啡制作视为一种精确的手艺。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="bg-slate-800 text-slate-300 py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-6 md:mb-0">
+                        <a href="index.html" class="text-2xl font-bold text-white mb-4 inline-block">
+                            <i class="fas fa-mountain text-blue-400 mr-2"></i>
+                            静思随笔
+                        </a>
+                        <p class="text-slate-400 mt-2">探索技术与人文的交汇点</p>
+                    </div>
+                    
+                    <div class="flex space-x-6">
+                        <a href="index.html" class="text-slate-400 hover:text-white">首页</a>
+                        <a href="about.html" class="text-white font-medium">关于</a>
+                        <a href="articles.html" class="text-slate-400 hover:text-white">文章</a>
+                        <a href="contact.html" class="text-slate-400 hover:text-white">联系</a>
+                    </div>
+                </div>
+                
+                <div class="border-t border-slate-700 mt-8 pt-8 text-center text-slate-500 text-sm">
+                    <p class="mb-2">&copy; 2026 静思随笔. 保留所有权利.</p>
+                    <p class="text-slate-600">
+                        本内容由AI生成，可能存在错误或不准确之处。请在使用前自行核实信息的准确性。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript 交互功能 -->
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+        
+        // 导航链接激活状态管理
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面是"关于"，所以设置关于链接为激活状态
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active', 'text-blue-600', 'font-medium');
+                if (link.textContent === '关于') {
+                    link.classList.add('active', 'text-blue-600', 'font-medium');
+                } else {
+                    link.classList.add('text-slate-600');
+                }
+            });
+            
+            // 滚动触发动画 - Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            // 观察所有具有 slide-up 类的元素
+            document.querySelectorAll('.slide-up').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // 卡片悬停效果
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                    this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                    this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '';
+                });
+            });
+            
+            // 技能条动画 - 页面加载后延迟执行
+            setTimeout(() => {
+                const skillBars = document.querySelectorAll('.skill-bar-fill');
+                skillBars.forEach(bar => {
+                    const currentWidth = bar.style.width;
+                    bar.style.width = '0';
+                    
+                    setTimeout(() => {
+                        bar.style.width = currentWidth;
+                    }, 300);
+                });
+            }, 800);
+            
+            // 调试：输出当前日期（参考文章中提到的功能）
+            console.log('页面生成时间：', new Date().toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            }));
+        });
+    </script>
+</body>
+</html>
