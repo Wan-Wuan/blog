@@ -420,47 +420,36 @@
 
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-                margin: 1rem auto;
-            }
-            
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            .page-title {
-                font-size: 2rem;
-            }
-            
-            .category-buttons {
-                gap: 0.5rem;
-            }
-            
-            .category-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            
-            .articles-grid {
-                grid-template-columns: 1fr;
-            }
+            .navbar { padding: 0.75rem 1rem; margin: 0.75rem auto; }
+            .nav-content { flex-wrap: wrap; gap: 0.5rem; }
+            .nav-links { gap: 0.5rem; }
+            .nav-link { padding: 0.4rem 0.65rem; font-size: 0.85rem; }
+            .page-title { font-size: 1.75rem; }
+            .page-subtitle { font-size: 0.95rem; }
+            .container { padding: 0 1rem; }
+            .page-header { margin-bottom: 2rem; }
+            .category-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+            .articles-grid { grid-template-columns: 1fr; }
+            .article-image { height: 180px; }
+            .article-content { padding: 1.25rem; }
+            .sidebar { padding: 1.25rem; }
+            .popular-img { width: 60px; height: 60px; }
+            .footer { padding: 1.5rem 1rem; margin-top: 2rem; }
         }
 
         @media (max-width: 480px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .page-title {
-                font-size: 1.75rem;
-            }
-            
-            .category-buttons {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
-            }
+            .navbar { margin: 0.5rem; border-radius: 8px; }
+            .nav-content { flex-direction: column; align-items: center; }
+            .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 0.3rem; }
+            .nav-link { font-size: 0.8rem; padding: 0.35rem 0.55rem; }
+            .logo { font-size: 1.3rem; }
+            .page-title { font-size: 1.5rem; }
+            .page-subtitle { font-size: 0.9rem; }
+            .category-buttons { justify-content: flex-start; overflow-x: auto; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch; }
+            .category-btn { padding: 0.5rem 1rem; font-size: 0.85rem; white-space: nowrap; }
+            .article-title { font-size: 1.1rem; }
+            .sidebar { margin-top: 2rem; }
+            .bg-circle { display: none; }
         }
     </style>
 </head>
